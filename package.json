@@ -11,7 +11,11 @@
     "migrate": "node-pg-migrate",
     "migrate:up": "node-pg-migrate up",
     "migrate:down": "node-pg-migrate down",
-    "migrate:create": "node-pg-migrate create"
+    "migrate:create": "node-pg-migrate create",
+    "test:facturacion": "ts-node scripts/test-facturacion-simple.ts",
+    "test:facturacion:prod": "ts-node scripts/test-facturacion-simple.ts production",
+    "test:facturacion:full": "ts-node scripts/test-facturacion-api.ts",
+    "test:rfc": "ts-node scripts/test-rfc-validation.ts"
   },
   "keywords": [
     "facturas",
