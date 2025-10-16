@@ -1,0 +1,410 @@
+{
+  "info": {
+    "name": "Bot Facturas API",
+    "description": "Colección completa de endpoints para la API de Bot Facturas con ML y OpenAI",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Facturas",
+      "item": [
+        {
+          "name": "Crear Factura Manual",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rfc\": \"XAXX010101000\",\n  \"fecha\": \"2024-01-15\",\n  \"importeTotal\": 1160.00,\n  \"iva\": 160.00,\n  \"subtotal\": 1000.00,\n  \"conceptos\": \"Servicios de consultoría\",\n  \"formaPago\": \"01\",\n  \"metodoPago\": \"PUE\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/facturas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "facturas"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Subir Ticket/PDF (OCR)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "archivo",
+                  "type": "file",
+                  "src": "/ruta/al/ticket.jpg",
+                  "description": "Imagen JPG, PNG o archivo PDF del ticket"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/facturas/ticket",
+              "host": ["{{base_url}}"],
+              "path": ["api", "facturas", "ticket"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Generar Factura desde Ticket Procesado",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/facturas/{{factura_id}}/generar",
+              "host": ["{{base_url}}"],
+              "path": ["api", "facturas", "{{factura_id}}", "generar"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Todas las Facturas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/facturas?limit=50&offset=0",
+              "host": ["{{base_url}}"],
+              "path": ["api", "facturas"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Factura por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/facturas/{{factura_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "facturas", "{{factura_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Facturas por RFC",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/facturas/rfc/{{rfc}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "facturas", "rfc", "{{rfc}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Factura",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"conceptos\": \"Servicios actualizados\",\n  \"status\": \"procesada\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/facturas/{{factura_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "facturas", "{{factura_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Machine Learning",
+      "item": [
+        {
+          "name": "Registrar Correcciones (Aprender)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"corrections\": [\n    {\n      \"fieldName\": \"rfc\",\n      \"correctedValue\": \"XEXX010101000\"\n    },\n    {\n      \"fieldName\": \"importeTotal\",\n      \"correctedValue\": \"1180.00\"\n    }\n  ],\n  \"correctedBy\": \"admin\",\n  \"source\": \"manual\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/ml/facturas/{{factura_id}}/correcciones",
+              "host": ["{{base_url}}"],
+              "path": ["api", "ml", "facturas", "{{factura_id}}", "correcciones"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Métricas de ML",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/ml/metricas?startDate=2024-01-01&endDate=2024-12-31",
+              "host": ["{{base_url}}"],
+              "path": ["api", "ml", "metricas"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2024-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2024-12-31"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Historial de Correcciones",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/ml/correcciones?limit=100",
+              "host": ["{{base_url}}"],
+              "path": ["api", "ml", "correcciones"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "100"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Correcciones de Factura Específica",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/ml/facturas/{{factura_id}}/correcciones",
+              "host": ["{{base_url}}"],
+              "path": ["api", "ml", "facturas", "{{factura_id}}", "correcciones"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Patrones Aprendidos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/ml/patrones",
+              "host": ["{{base_url}}"],
+              "path": ["api", "ml", "patrones"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Patrones por Campo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/ml/patrones?fieldName=rfc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "ml", "patrones"],
+              "query": [
+                {
+                  "key": "fieldName",
+                  "value": "rfc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Métricas Diarias",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/ml/metricas/actualizar",
+              "host": ["{{base_url}}"],
+              "path": ["api", "ml", "metricas", "actualizar"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reinicializar Servicio ML",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/ml/reinicializar",
+              "host": ["{{base_url}}"],
+              "path": ["api", "ml", "reinicializar"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "WhatsApp",
+      "item": [
+        {
+          "name": "Webhook (Recibir Mensaje)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "From",
+                  "value": "whatsapp:+525512345678",
+                  "type": "text"
+                },
+                {
+                  "key": "Body",
+                  "value": "Hola, quiero facturar",
+                  "type": "text"
+                },
+                {
+                  "key": "MessageSid",
+                  "value": "SMxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+                  "type": "text"
+                },
+                {
+                  "key": "MediaUrl0",
+                  "value": "https://api.twilio.com/2010-04-01/Accounts/xxx/Messages/xxx/Media/xxx",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "MediaContentType0",
+                  "value": "image/jpeg",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/whatsapp/webhook",
+              "host": ["{{base_url}}"],
+              "path": ["api", "whatsapp", "webhook"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verificación Webhook",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/whatsapp/webhook?hub.mode=subscribe&hub.verify_token=mi_token_secreto&hub.challenge=test123",
+              "host": ["{{base_url}}"],
+              "path": ["api", "whatsapp", "webhook"],
+              "query": [
+                {
+                  "key": "hub.mode",
+                  "value": "subscribe"
+                },
+                {
+                  "key": "hub.verify_token",
+                  "value": "mi_token_secreto"
+                },
+                {
+                  "key": "hub.challenge",
+                  "value": "test123"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "factura_id",
+      "value": "1"
+    },
+    {
+      "key": "rfc",
+      "value": "XAXX010101000"
+    }
+  ]
+}
